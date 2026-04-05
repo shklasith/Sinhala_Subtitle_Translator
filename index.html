@@ -3,20 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>සිංහල උපසිරැසි පරිවර්තකය</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;600&family=JetBrains+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<title>Subtitle Translator | සිංහල</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #1a1a24;
-    --border: #2a2a3a;
-    --accent: #e8c547;
-    --accent2: #ff6b35;
-    --text: #e8e8f0;
-    --muted: #666680;
-    --success: #4ade80;
-    --error: #f87171;
+    --bg: #0b0f19;
+    --surface: #161c2d;
+    --surface-hover: #1c2539;
+    --border: rgba(255, 255, 255, 0.08);
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.15);
+    --accent2: #06b6d4;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --success: #10b981;
+    --error: #ef4444;
+    --radius: 12px;
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,526 +27,666 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Inter', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
+    line-height: 1.5;
   }
 
-  /* Film grain overlay */
+  /* Decorative Background */
   body::before {
     content: '';
     position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.4;
+    top: -10%; left: -10%;
+    width: 40%; height: 40%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    filter: blur(80px);
+    z-index: -1;
   }
 
-  /* Scanline effect */
   body::after {
     content: '';
     position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-    pointer-events: none;
-    z-index: 9998;
+    bottom: -10%; right: -10%;
+    width: 40%; height: 40%;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+    filter: blur(80px);
+    z-index: -1;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px;
   }
 
   .header {
-    border-bottom: 1px solid var(--border);
-    padding: 24px 40px;
+    padding: 40px 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 20px;
-    background: var(--surface);
+    text-align: center;
+    gap: 16px;
   }
 
   .logo-icon {
-    width: 44px;
-    height: 44px;
-    background: var(--accent);
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
-    clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 100%, 0 85%);
+    font-size: 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px var(--accent-glow);
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
   }
 
   .logo-text {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 3px;
-    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .logo-sub {
-    font-size: 10px;
+    font-size: 14px;
     color: var(--muted);
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    margin-top: 2px;
-    font-family: 'Noto Sans Sinhala', sans-serif;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
   }
 
   .badge {
-    margin-left: auto;
-    background: rgba(232,197,71,0.1);
-    border: 1px solid rgba(232,197,71,0.3);
-    color: var(--accent);
-    font-size: 10px;
-    padding: 4px 10px;
-    letter-spacing: 2px;
-  }
-
-  .main {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 24px;
-  }
-
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 13px;
-    letter-spacing: 4px;
+    margin-top: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
     color: var(--muted);
-    margin-bottom: 12px;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    text-transform: uppercase;
+    backdrop-filter: blur(4px);
+  }
+
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 80px;
+  }
+
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .step-card:hover {
+    border-color: rgba(99, 102, 241, 0.3);
+    background: var(--surface-hover);
+  }
+
+  .step-header {
     display: flex;
     align-items: center;
     gap: 12px;
-  }
-
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 24px;
     margin-bottom: 20px;
-    position: relative;
   }
 
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 100%;
+  .step-number {
+    width: 24px;
+    height: 24px;
     background: var(--accent);
+    color: #fff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .step-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
   }
 
   label {
     display: block;
-    font-size: 10px;
-    letter-spacing: 3px;
+    font-size: 12px;
+    font-weight: 600;
     color: var(--muted);
     margin-bottom: 8px;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  input[type="text"], input[type="password"] {
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  input[type="text"], input[type="password"], select {
     width: 100%;
-    background: var(--bg);
+    background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--border);
     color: var(--text);
     padding: 12px 16px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
   }
 
-  input[type="text"]:focus, input[type="password"]:focus {
+  input:focus, select:focus {
     border-color: var(--accent);
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 4px var(--accent-glow);
   }
 
   .toggle-eye {
     position: absolute;
     right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
     background: none;
     border: none;
     color: var(--muted);
     cursor: pointer;
     font-size: 16px;
     padding: 4px;
+    transition: color 0.2s;
   }
 
-  .input-wrap { position: relative; }
+  .toggle-eye:hover { color: var(--text); }
 
-  .upload-zone {
-    border: 1px dashed var(--border);
-    background: var(--bg);
-    padding: 40px;
+  .upload-area {
+    border: 2px dashed var(--border);
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 40px 24px;
     text-align: center;
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
   }
 
-  .upload-zone:hover, .upload-zone.dragover {
+  .upload-area:hover, .upload-area.dragover {
     border-color: var(--accent);
-    background: rgba(232,197,71,0.03);
+    background: var(--accent-glow);
   }
 
-  .upload-zone input {
+  .upload-area input {
     position: absolute;
     inset: 0;
     opacity: 0;
     cursor: pointer;
-    width: 100%;
-    height: 100%;
   }
 
-  .upload-icon { font-size: 36px; margin-bottom: 12px; }
-  .upload-label { font-size: 13px; color: var(--muted); }
-  .upload-label strong { color: var(--accent); }
-  .file-name { margin-top: 8px; font-size: 11px; color: var(--success); }
+  .upload-icon { 
+    font-size: 40px; 
+    margin-bottom: 16px;
+    filter: drop-shadow(0 4px 12px var(--accent-glow));
+  }
+
+  .upload-text { font-size: 14px; color: var(--muted); }
+  .upload-text strong { color: var(--accent); font-weight: 600; }
+  .file-info { 
+    margin-top: 12px; 
+    font-size: 13px; 
+    color: var(--success); 
+    font-weight: 500;
+    display: none;
+  }
+  .file-info.visible { display: block; }
 
   .settings-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-  }
-
-  select {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 12px 16px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    outline: none;
-    appearance: none;
-    cursor: pointer;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
   }
 
   .btn {
     width: 100%;
     padding: 16px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
-    letter-spacing: 4px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border-radius: 12px;
     border: none;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
     position: relative;
     overflow: hidden;
   }
 
   .btn-primary {
-    background: var(--accent);
-    color: var(--bg);
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    box-shadow: 0 8px 32px var(--accent-glow);
   }
 
   .btn-primary:hover:not(:disabled) {
-    background: #f5d45e;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px var(--accent-glow);
+    filter: brightness(1.1);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0);
   }
 
   .btn-primary:disabled {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: not-allowed;
-    transform: none;
+    background: var(--muted);
+    box-shadow: none;
   }
 
-  .btn-download {
-    background: transparent;
-    border: 1px solid var(--success);
-    color: var(--success);
-    font-size: 16px;
-    padding: 14px;
-    margin-top: 12px;
-  }
-
-  .btn-download:hover {
-    background: rgba(74,222,128,0.08);
-  }
-
-  /* Progress */
-  .progress-wrap {
+  /* Progress Section */
+  .progress-section {
     display: none;
-    margin-bottom: 20px;
+    margin-top: 8px;
   }
 
-  .progress-wrap.visible { display: block; }
+  .progress-section.visible { display: block; }
 
-  .progress-header {
+  .progress-meta {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 11px;
+    align-items: flex-end;
+    margin-bottom: 12px;
   }
 
-  .progress-status { color: var(--accent); }
-  .progress-count { color: var(--muted); }
+  .progress-label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
 
-  .progress-bar-bg {
-    height: 4px;
-    background: var(--border);
-    position: relative;
+  .status-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .count-text {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .progress-track {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 100px;
     overflow: hidden;
+    position: relative;
   }
 
-  .progress-bar-fill {
+  .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     width: 0%;
-    transition: width 0.3s ease;
+    border-radius: 100px;
+    transition: width 0.4s ease-out;
+    position: relative;
   }
 
-  .progress-bar-bg::after {
+  .progress-fill::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-    animation: shimmer 1.5s infinite;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(
+      90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.2), 
+      transparent
+    );
+    animation: shine 2s infinite;
   }
 
-  @keyframes shimmer {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(100%); }
+  @keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
   }
 
-  /* Log */
-  .log {
-    background: var(--bg);
+  .log-container {
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border);
+    border-radius: 8px;
     padding: 16px;
-    height: 140px;
-    overflow-y: auto;
-    font-size: 11px;
-    line-height: 1.8;
-    scroll-behavior: smooth;
   }
 
-  .log-entry { display: flex; gap: 12px; }
-  .log-time { color: var(--muted); flex-shrink: 0; }
-  .log-msg { color: var(--text); }
+  .log-header {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .log-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .log-content {
+    height: 120px;
+    overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .log-line { margin-bottom: 4px; display: flex; gap: 12px; }
+  .log-ts { color: rgba(255,255,255,0.2); flex-shrink: 0; }
   .log-msg.success { color: var(--success); }
   .log-msg.error { color: var(--error); }
-  .log-msg.info { color: var(--accent); }
+  .log-msg.info { color: var(--accent2); }
 
-  /* Preview */
-  .preview-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
+  /* Results Section */
+  .result-section {
+    display: none;
+    animation: fadeIn 0.5s ease-out;
   }
 
-  .preview-box {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    padding: 16px;
-    height: 200px;
-    overflow-y: auto;
-  }
-
-  .preview-title {
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--muted);
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .sub-block {
-    margin-bottom: 12px;
-    font-size: 11px;
-    line-height: 1.7;
-  }
-
-  .sub-idx { color: var(--accent); font-size: 10px; }
-  .sub-time { color: var(--muted); font-size: 10px; }
-  .sub-text { color: var(--text); font-family: 'Noto Sans Sinhala', sans-serif; }
-
-  .result-section { display: none; }
   .result-section.visible { display: block; }
 
-  .stats-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  .stat {
-    background: var(--surface);
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border);
-    padding: 16px 20px;
-    flex: 1;
+    padding: 20px;
+    border-radius: var(--radius);
     text-align: center;
   }
 
-  .stat-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px;
-    color: var(--accent);
+  .stat-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent2);
+    display: block;
   }
 
   .stat-label {
-    font-size: 10px;
-    letter-spacing: 2px;
+    font-size: 11px;
+    font-weight: 600;
     color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     margin-top: 4px;
   }
 
-  .error-msg {
-    background: rgba(248,113,113,0.08);
-    border: 1px solid rgba(248,113,113,0.3);
-    color: var(--error);
-    padding: 12px 16px;
-    font-size: 12px;
-    margin-bottom: 16px;
-    display: none;
+  .preview-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
   }
 
-  .error-msg.visible { display: block; }
+  .preview-pane {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
 
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); }
-  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  .pane-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pane-content {
+    height: 250px;
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  .preview-item {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .preview-item:last-child { border: none; }
+
+  .item-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .item-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .btn-download {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--success);
+    margin-top: 24px;
+  }
+
+  .btn-download:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: var(--success);
+  }
+
+  /* Utility */
+  .error-toast {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--error);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .error-toast.visible { display: flex; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+  @media (max-width: 640px) {
+    .preview-container { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .logo-text { font-size: 28px; }
+  }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="logo-icon">🎬</div>
-  <div>
-    <div class="logo-text">SUBTITLE TRANSLATOR</div>
-    <div class="logo-sub">සිංහල උපසිරැසි පරිවර්තකය</div>
-  </div>
-  <div class="badge" id="modelBadge">GEMINI 2.5 FLASH LITE</div>
-</div>
-
-<div class="main">
-
-  <!-- API Key -->
-  <div class="section-title">01 &mdash; GEMINI API KEY</div>
-  <div class="card">
-    <label>ඔබගේ Gemini API Key ඇතුළු කරන්න</label>
-    <div class="input-wrap">
-      <input type="password" id="apiKey" placeholder="AIza...">
-      <button class="toggle-eye" onclick="toggleKey()">👁</button>
+<div class="container">
+  <header class="header">
+    <div class="logo-icon">🎬</div>
+    <div>
+      <h1 class="logo-text">Subtitle Translator</h1>
+      <p class="logo-sub">සිංහල උපසිරැසි පරිවර්තකය</p>
     </div>
-    <div style="margin-top:8px;font-size:10px;color:var(--muted);">
-      → <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent);text-decoration:none;">aistudio.google.com</a> වලින් API key එක ගන්න (free)
-    </div>
-  </div>
+    <div class="badge" id="modelBadge">GEMINI 2.5 FLASH LITE</div>
+  </header>
 
-  <!-- File Upload -->
-  <div class="section-title">02 &mdash; SRT FILE</div>
-  <div class="card">
-    <div class="upload-zone" id="uploadZone">
-      <input type="file" id="fileInput" accept=".srt">
-      <div class="upload-icon">📄</div>
-      <div class="upload-label">SRT ෆයිල් එක <strong>drag & drop</strong> කරන්න<br>හෝ click කරන්න</div>
-      <div class="file-name" id="fileName"></div>
-    </div>
-  </div>
-
-  <!-- Settings -->
-  <div class="section-title">03 &mdash; SETTINGS</div>
-  <div class="card">
-    <div class="settings-grid">
-      <div>
-        <label>AI Model</label>
-        <select id="aiModel" onchange="updateBadge()">
-          <option value="gemini-3.1-flash-lite-preview">High Accuracy (Gemini 3.1)</option>
-          <option value="gemini-2.5-flash-lite" selected>Low Cost (Gemini 2.5)</option>
-        </select>
+  <main class="main-content">
+    
+    <!-- Step 1: API Key -->
+    <section class="step-card">
+      <div class="step-header">
+        <div class="step-number">1</div>
+        <h2 class="step-title">Gemini API Key</h2>
       </div>
-      <div>
-        <label>Batch Size (ඒකවරෙකට subtitles කීයක්)</label>
-        <select id="batchSize">
-          <option value="30">30 subtitles per batch</option>
-          <option value="50" selected>50 subtitles per batch</option>
-          <option value="80">80 subtitles per batch</option>
-        </select>
+      <label>Enter your Google AI Studio API Key</label>
+      <div class="input-group">
+        <input type="password" id="apiKey" placeholder="AIzaSy...">
+        <button class="toggle-eye" onclick="toggleKey()" title="Toggle Visibility">👁</button>
       </div>
-      <div>
-        <label>Translation Style</label>
-        <select id="style">
-          <option value="spoken">කතාකරන සිංහල (Spoken)</option>
-          <option value="formal">ලිඛිත සිංහල (Formal)</option>
-        </select>
-      </div>
-    </div>
-  </div>
+      <p style="margin-top:12px;font-size:12px;color:var(--muted);">
+        Don't have a key? Get one for free at <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:600;">AI Studio</a>
+      </p>
+    </section>
 
-  <!-- Error -->
-  <div class="error-msg" id="errorMsg"></div>
-
-  <!-- Translate Button -->
-  <button class="btn btn-primary" id="translateBtn" onclick="startTranslation()" disabled>
-    ▶ TRANSLATE
-  </button>
-
-  <!-- Progress -->
-  <div class="progress-wrap" id="progressWrap" style="margin-top:20px;">
-    <div class="progress-header">
-      <span class="progress-status" id="progressStatus">පරිවර්තනය කරමින්...</span>
-      <span class="progress-count" id="progressCount">0 / 0</span>
-    </div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" id="progressFill"></div>
-    </div>
-    <div style="margin-top:12px;">
-      <div class="section-title" style="margin-bottom:8px;">LOG</div>
-      <div class="log" id="log"></div>
-    </div>
-  </div>
-
-  <!-- Results -->
-  <div class="result-section" id="resultSection">
-    <div class="section-title" style="margin-top:24px;">RESULT</div>
-
-    <div class="stats-row">
-      <div class="stat">
-        <div class="stat-val" id="statTotal">0</div>
-        <div class="stat-label">SUBTITLES</div>
+    <!-- Step 2: File Upload -->
+    <section class="step-card">
+      <div class="step-header">
+        <div class="step-number">2</div>
+        <h2 class="step-title">SRT File</h2>
       </div>
-      <div class="stat">
-        <div class="stat-val" id="statBatches">0</div>
-        <div class="stat-label">BATCHES</div>
+      <div class="upload-area" id="uploadZone">
+        <input type="file" id="fileInput" accept=".srt">
+        <div class="upload-icon">📁</div>
+        <p class="upload-text"><strong>Click to upload</strong> or drag and drop<br>your SRT subtitle file here</p>
+        <div class="file-info" id="fileName"></div>
       </div>
-      <div class="stat">
-        <div class="stat-val" id="statTime">0s</div>
-        <div class="stat-label">TIME</div>
-      </div>
-    </div>
+    </section>
 
-    <div class="preview-grid">
-      <div class="preview-box">
-        <div class="preview-title">ORIGINAL</div>
-        <div id="previewOriginal"></div>
+    <!-- Step 3: Settings -->
+    <section class="step-card">
+      <div class="step-header">
+        <div class="step-number">3</div>
+        <h2 class="step-title">Settings</h2>
       </div>
-      <div class="preview-box">
-        <div class="preview-title">සිංහල</div>
-        <div id="previewSinhala"></div>
+      <div class="settings-grid">
+        <div>
+          <label>AI Model</label>
+          <select id="aiModel" onchange="updateBadge()">
+            <option value="gemini-3.1-flash-lite-preview">High Accuracy (Gemini 3.1)</option>
+            <option value="gemini-2.5-flash-lite" selected>Low Cost (Gemini 2.5)</option>
+          </select>
+        </div>
+        <div>
+          <label>Batch Size</label>
+          <select id="batchSize">
+            <option value="30">30 subtitles / batch</option>
+            <option value="50" selected>50 subtitles / batch</option>
+            <option value="80">80 subtitles / batch</option>
+          </select>
+        </div>
+        <div>
+          <label>Style</label>
+          <select id="style">
+            <option value="spoken">කතාකරන සිංහල (Spoken)</option>
+            <option value="formal">ලිඛිත සිංහල (Formal)</option>
+          </select>
+        </div>
       </div>
+    </section>
+
+    <div class="error-toast" id="errorMsg">
+      <span>⚠️</span>
+      <span id="errorText"></span>
     </div>
 
-    <button class="btn btn-download" onclick="downloadSRT()">
-      ⬇ DOWNLOAD SINHALA SRT
+    <button class="btn btn-primary" id="translateBtn" onclick="startTranslation()" disabled>
+      <span>🚀</span> Start Translation
     </button>
-  </div>
 
+    <!-- Progress Section -->
+    <div class="progress-section" id="progressWrap">
+      <div class="progress-meta">
+        <div class="progress-label">
+          <span class="status-text" id="progressStatus">Initializing...</span>
+          <span class="count-text" id="progressCount">0 / 0 batches</span>
+        </div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      
+      <div class="log-container">
+        <div class="log-header">Live Translation Log</div>
+        <div class="log-content" id="log"></div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="result-section" id="resultSection">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-value" id="statTotal">0</span>
+          <span class="stat-label">Subtitles</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="statBatches">0</span>
+          <span class="stat-label">Batches</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="statTime">0s</span>
+          <span class="stat-label">Total Time</span>
+        </div>
+      </div>
+
+      <div class="preview-container">
+        <div class="preview-pane">
+          <div class="pane-header">Original English</div>
+          <div class="pane-content" id="previewOriginal"></div>
+        </div>
+        <div class="preview-pane">
+          <div class="pane-header">Sinhala Translation</div>
+          <div class="pane-content" id="previewSinhala"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-download" onclick="downloadSRT()">
+        <span>📥</span> Download Translated SRT
+      </button>
+    </div>
+
+  </main>
 </div>
 
 <script>
@@ -580,9 +723,11 @@ function loadFile(file) {
   reader.onload = e => {
     const content = e.target.result;
     srtBlocks = parseSRT(content);
-    document.getElementById('fileName').textContent = `✓ ${file.name} — ${srtBlocks.length} subtitles`;
+    const infoEl = document.getElementById('fileName');
+    infoEl.textContent = `✓ ${file.name} (${srtBlocks.length} subtitles)`;
+    infoEl.classList.add('visible');
     checkReady();
-    log(`SRT ෆයිල් load වුණා: ${srtBlocks.length} subtitle blocks`, 'success');
+    log(`File loaded: ${file.name} (${srtBlocks.length} blocks)`, 'success');
   };
   reader.readAsText(file, 'UTF-8');
 }
@@ -628,8 +773,8 @@ function log(msg, type = '') {
   const now = new Date();
   const t = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
   const entry = document.createElement('div');
-  entry.className = 'log-entry';
-  entry.innerHTML = `<span class="log-time">${t}</span><span class="log-msg ${type}">${msg}</span>`;
+  entry.className = 'log-line';
+  entry.innerHTML = `<span class="log-ts">${t}</span><span class="log-msg ${type}">${msg}</span>`;
   logEl.appendChild(entry);
   logEl.scrollTop = logEl.scrollHeight;
 }
@@ -637,7 +782,7 @@ function log(msg, type = '') {
 function setProgress(done, total, status) {
   const pct = total > 0 ? (done / total * 100) : 0;
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressCount').textContent = `${done} / ${total}`;
+  document.getElementById('progressCount').textContent = `${done} / ${total} batches`;
   document.getElementById('progressStatus').textContent = status;
 }
 
@@ -683,7 +828,6 @@ ${numbered}`;
   const data = await response.json();
   const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
   
-  // Parse numbered responses
   const results = new Array(texts.length).fill('');
   const lines = resultText.split('\n');
   
@@ -693,21 +837,19 @@ ${numbered}`;
   for (const line of lines) {
     const match = line.match(/^\[(\d+)\]\s*(.*)/);
     if (match) {
-      if (currentIdx >= 0 && currentIdx <= texts.length) {
+      if (currentIdx >= 1 && currentIdx <= texts.length) {
         results[currentIdx - 1] = currentLines.join('\n').trim();
       }
       currentIdx = parseInt(match[1]);
       currentLines = [match[2]];
-    } else if (currentIdx >= 0 && line.trim()) {
+    } else if (currentIdx >= 1 && line.trim()) {
       currentLines.push(line);
     }
   }
-  // Save last
-  if (currentIdx >= 0 && currentIdx <= texts.length) {
+  if (currentIdx >= 1 && currentIdx <= texts.length) {
     results[currentIdx - 1] = currentLines.join('\n').trim();
   }
 
-  // Fallback: if empty, keep original
   return results.map((r, i) => r || texts[i]);
 }
 
@@ -726,15 +868,14 @@ async function startTranslation() {
   document.getElementById('log').innerHTML = '';
 
   startTime = Date.now();
-  translatedBlocks = [...srtBlocks];
+  translatedBlocks = JSON.parse(JSON.stringify(srtBlocks));
 
   const total = srtBlocks.length;
   const batches = Math.ceil(total / batchSize);
   let done = 0;
-  let failCount = 0;
 
-  log(`පරිවර්තනය ආරම්භ කරමින්... (${total} subtitles, ${batches} batches)`, 'info');
-  setProgress(0, batches, 'ආරම්භ කරමින්...');
+  log(`Translation started... (${total} subtitles, ${batches} batches)`, 'info');
+  setProgress(0, batches, 'Initializing phases...');
 
   try {
     for (let b = 0; b < batches; b++) {
@@ -742,8 +883,8 @@ async function startTranslation() {
       const end = Math.min(start + batchSize, total);
       const batchTexts = srtBlocks.slice(start, end).map(bl => bl.text);
 
-      log(`Batch ${b + 1}/${batches} — subtitles ${start + 1}–${end}...`);
-      setProgress(b, batches, `Batch ${b + 1} / ${batches} translate කරමින්...`);
+      log(`Processing batch ${b + 1}/${batches}...`);
+      setProgress(b, batches, `Translating batch ${b + 1}...`);
 
       let retries = 2;
       let success = false;
@@ -752,41 +893,39 @@ async function startTranslation() {
         try {
           const translated = await translateBatch(batchTexts, apiKey, style, model);
           for (let i = 0; i < translated.length; i++) {
-            translatedBlocks[start + i] = { ...srtBlocks[start + i], text: translated[i] };
+            translatedBlocks[start + i].text = translated[i];
           }
           success = true;
           done++;
-          log(`✓ Batch ${b + 1} සම්පූර්ණ යි`, 'success');
+          log(`✓ Batch ${b + 1} completed`, 'success');
         } catch (err) {
           retries--;
           if (retries > 0) {
-            log(`⚠ Batch ${b + 1} නැවත උත්සාහ කරමින්... (${err.message})`, 'error');
+            log(`⚠ Batch ${b + 1} failed, retrying... (${err.message})`, 'error');
             await new Promise(r => setTimeout(r, 2000));
           } else {
-            failCount++;
-            log(`✗ Batch ${b + 1} fail — original text ගන්නවා`, 'error');
+            log(`✗ Batch ${b + 1} failed, skipping translation for this batch`, 'error');
           }
         }
       }
 
-      setProgress(b + 1, batches, `Batch ${b + 1} / ${batches} සම්පූර්ණ`);
+      setProgress(b + 1, batches, `Batch ${b + 1} / ${batches} finished`);
 
-      // Rate limit delay (6s safe for free tier 10 RPM)
       if (b < batches - 1) {
-        log(`⏳ 6s delay (rate limit)...`);
+        log(`⏳ Cooling down to avoid rate limits...`);
         await new Promise(r => setTimeout(r, 6000));
       }
     }
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-    log(`🎉 සම්පූර්ණ! ${total} subtitles, ${elapsed}s`, 'success');
+    log(`🎉 Translation complete in ${elapsed}s`, 'success');
 
     translatedSRTContent = buildSRT(translatedBlocks);
     showResults(total, batches, elapsed);
 
   } catch (err) {
     showError(err.message);
-    log(`✗ Error: ${err.message}`, 'error');
+    log(`✗ Fatal Error: ${err.message}`, 'error');
     document.getElementById('translateBtn').disabled = false;
   }
 }
@@ -796,35 +935,36 @@ function showResults(total, batches, elapsed) {
   document.getElementById('statBatches').textContent = batches;
   document.getElementById('statTime').textContent = elapsed + 's';
 
-  // Preview (first 5 blocks)
   const origEl = document.getElementById('previewOriginal');
-  const siEl = document.getElementById('previewSinhala');
+  const sinhalaEl = document.getElementById('previewSinhala');
+  
   origEl.innerHTML = '';
-  siEl.innerHTML = '';
+  sinhalaEl.innerHTML = '';
 
-  const preview = Math.min(5, srtBlocks.length);
-  for (let i = 0; i < preview; i++) {
-    origEl.innerHTML += `<div class="sub-block">
-      <div class="sub-idx">${srtBlocks[i].idx}</div>
-      <div class="sub-time">${srtBlocks[i].timestamp}</div>
-      <div class="sub-text">${escHtml(srtBlocks[i].text)}</div>
-    </div>`;
-    siEl.innerHTML += `<div class="sub-block">
-      <div class="sub-idx">${translatedBlocks[i].idx}</div>
-      <div class="sub-time">${translatedBlocks[i].timestamp}</div>
-      <div class="sub-text">${escHtml(translatedBlocks[i].text)}</div>
-    </div>`;
-  }
+  srtBlocks.slice(0, 15).forEach((b, i) => {
+    origEl.innerHTML += `
+      <div class="preview-item">
+        <div class="item-meta">#${b.idx} &bull; ${b.timestamp}</div>
+        <div class="item-text">${b.text}</div>
+      </div>`;
+    
+    const tb = translatedBlocks[i];
+    sinhalaEl.innerHTML += `
+      <div class="preview-item">
+        <div class="item-meta">#${tb.idx} &bull; ${tb.timestamp}</div>
+        <div class="item-text" style="font-family:'Inter', sans-serif;">${tb.text}</div>
+      </div>`;
+  });
 
   document.getElementById('resultSection').classList.add('visible');
   document.getElementById('translateBtn').disabled = false;
-  document.getElementById('translateBtn').textContent = '▶ TRANSLATE AGAIN';
 }
 
 function showError(msg) {
-  const el = document.getElementById('errorMsg');
-  el.textContent = '✗ Error: ' + msg;
-  el.classList.add('visible');
+  const errEl = document.getElementById('errorMsg');
+  const errTxt = document.getElementById('errorText');
+  errTxt.textContent = msg;
+  errEl.classList.add('visible');
 }
 
 function downloadSRT() {
@@ -833,13 +973,11 @@ function downloadSRT() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'sinhala_subtitles.srt';
+  a.download = 'sinhala_translated.srt';
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(url);
-}
-
-function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 </script>
 </body>
