@@ -13,7 +13,7 @@ A simple, browser-based Sinhala subtitle translator that leverages the Google Ge
 ## Usage
 
 1. Obtain a **Gemini API Key** from [Google AI Studio](https://aistudio.google.com/).
-2. Open the `sinhala-subtitle-translator (1).html` file in any modern web browser.
+2. Open the `index.html` file in any modern web browser.
 3. Paste your Gemini API key in the designated input field.
 4. Drag & Drop or select your English `.srt` file.
 5. Choose your Preferred translation style and batch size.
