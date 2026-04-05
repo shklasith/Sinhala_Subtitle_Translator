@@ -1,6 +1,6 @@
 # Sinhala Subtitle Translator
 
-A simple, browser-based Sinhala subtitle translator that leverages the Google Gemini 3.1 Flash Lite API to translate English `.srt` subtitle files into Sinhala.
+A simple, browser-based Sinhala subtitle translator that leverages the Google Gemini 2.5 Flash Lite API to translate English `.srt` subtitle files into Sinhala.
 
 ## Features
 
@@ -23,4 +23,4 @@ A simple, browser-based Sinhala subtitle translator that leverages the Google Ge
 ## Technologies
 
 - HTML5 / CSS3 / Vanilla JavaScript
-- Google Generative Language API (Gemini 3.1)
+- Google Generative Language API (Gemini 2.5)
