@@ -1,6 +1,6 @@
-# Sinhala Subtitle Translator
+# AI Subtitle Translator
 
-A simple, browser-based Sinhala subtitle translator that leverages Google Gemini AI models to translate English `.srt` subtitle files into Sinhala.
+A simple, browser-based AI subtitle translator that leverages Google Gemini AI models to translate English `.srt` subtitle files into Sinhala.
 
 ## Features
 
